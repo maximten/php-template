@@ -1,0 +1,26 @@
+version: '3.2'
+
+services: 
+  php-fpm:
+    image: rocketfirmcom/php7.2-fpm-alpine
+    volumes:
+      - ./src:/var/www
+    links:  
+      - mysql
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./src:/var/www
+    ports:
+      - "80:80"
+      - "443:443"
+    links:  
+      - php-fpm
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=default
+    ports:
+      - "3306:3306"
